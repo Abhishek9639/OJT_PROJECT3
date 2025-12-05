@@ -96,7 +96,7 @@ export class UI {
         };
 
         // Auto-update for custom font inputs
-        const debouncedReload = debounce(() => this.handleReload(), 500);
+        const debouncedReload = debounce(() => this.handleReload(true), 500);
 
         if (this.elements.customFontUrl) {
             this.elements.customFontUrl.addEventListener('input', debouncedReload);
@@ -456,7 +456,7 @@ body {
         URL.revokeObjectURL(url);
     }
 
-    async handleReload() {
+    async handleReload(isPreview = false) {
         if (!this.elements.fontSelect || !this.elements.strategySelect) return;
 
         const fontName = this.elements.fontSelect.value;
@@ -517,20 +517,57 @@ body {
                 return;
             }
 
-            // Remove existing display param if present
-            fontUrl = fontUrl.replace(/[?&]display=[^&]+/, '');
+            // Decode HTML entities (e.g. &amp; -> &)
+            fontUrl = fontUrl.replace(/&amp;/g, '&');
 
-            // Try to extract font name from URL if not provided
-            if (customName) {
-                actualFontName = customName;
-            } else {
+            // Check if user pasted a full <link> tag
+            if (fontUrl.includes('<link') && fontUrl.includes('href')) {
+                // Match the href that points to the CSS file (ignore preconnect links)
+                // Allow for flexible spacing around =
+                const hrefMatch = fontUrl.match(/href\s*=\s*["'](https:\/\/fonts\.googleapis\.com\/css[^"']+)["']/);
+                if (hrefMatch) {
+                    fontUrl = hrefMatch[1];
+                }
+            }
+            // Check if user pasted an @import statement
+            else if (fontUrl.includes('@import') && fontUrl.includes('url')) {
+                const urlMatch = fontUrl.match(/url\s*\(['"]?(https:\/\/fonts\.googleapis\.com\/css[^'"\)]+)['"]?\)/);
+                if (urlMatch) {
+                    fontUrl = urlMatch[1];
+                }
+            }
+
+            try {
+                const urlObj = new URL(fontUrl);
+
+                // Remove existing display param
+                urlObj.searchParams.delete('display');
+
+                // Update fontUrl from the modified object
+                fontUrl = urlObj.toString();
+
                 // Extract font name from Google Fonts URL
-                const match = fontUrl.match(/[?&]family=([^&:]+)/);
-                if (match) {
-                    actualFontName = match[1].replace(/\+/g, ' ');
+                const familyParam = urlObj.searchParams.get('family');
+                if (familyParam) {
+                    // The family param might be "Roboto:wght@400;700" or just "Roboto"
+                    // We want just the name part before the colon
+                    actualFontName = familyParam.split(':')[0].replace(/\+/g, ' ');
+
+                    // Auto-update the font name input to match the URL
+                    if (this.elements.customFontName) {
+                        this.elements.customFontName.value = actualFontName;
+                    }
+                } else if (customName) {
+                    // Fallback to custom name ONLY if URL extraction failed
+                    actualFontName = customName;
                 } else {
                     actualFontName = 'CustomFont';
                 }
+            } catch (e) {
+                console.warn('Invalid URL entered:', e);
+                // If URL parsing fails, we might still want to try using it as is or return
+                // But for now, let's just return to avoid errors
+                return;
             }
 
             console.log('Custom font URL:', fontUrl);
@@ -566,7 +603,8 @@ body {
 
         // Simulate different loading strategies with visible delays
         // Random load time between 1 and 3 seconds for better UX
-        const simulatedLoadTime = (Math.floor(Math.random() * 20) + 10) * 100; // 1000-3000 ms
+        // If isPreview is true, use 0 delay for instant feedback
+        const simulatedLoadTime = isPreview ? 0 : (Math.floor(Math.random() * 20) + 10) * 100; // 1000-3000 ms
 
         console.log(`Simulating strategy: ${strategy} with duration: ${simulatedLoadTime}ms`);
 
