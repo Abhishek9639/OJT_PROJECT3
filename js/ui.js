@@ -165,16 +165,6 @@ export class UI {
         // Store original text for subset simulation
         this.originalText = "The quick brown fox jumps over the lazy dog. 0123456789 !@#$%^&*() éàüñç";
 
-        // Subset size calculation
-        const updateSubsetSize = () => {
-            let size = 0;
-            if (this.elements.subsetLatin && this.elements.subsetLatin.checked) size += 25;
-            if (this.elements.subsetNumbers && this.elements.subsetNumbers.checked) size += 5;
-            if (this.elements.subsetSymbols && this.elements.subsetSymbols.checked) size += 3;
-            if (this.elements.subsetExtended && this.elements.subsetExtended.checked) size += 15;
-            if (this.elements.subsetSize) this.elements.subsetSize.textContent = `${size} KB`;
-        };
-
         // Test Subset Button
         const testSubsetBtn = document.getElementById('test-subset-btn');
         const resetSubsetBtn = document.getElementById('reset-subset-btn');
@@ -193,10 +183,10 @@ export class UI {
             });
         }
 
-        if (this.elements.subsetLatin) this.elements.subsetLatin.addEventListener('change', updateSubsetSize);
-        if (this.elements.subsetNumbers) this.elements.subsetNumbers.addEventListener('change', updateSubsetSize);
-        if (this.elements.subsetSymbols) this.elements.subsetSymbols.addEventListener('change', updateSubsetSize);
-        if (this.elements.subsetExtended) this.elements.subsetExtended.addEventListener('change', updateSubsetSize);
+        if (this.elements.subsetLatin) this.elements.subsetLatin.addEventListener('change', () => this.calculateSubsetSize());
+        if (this.elements.subsetNumbers) this.elements.subsetNumbers.addEventListener('change', () => this.calculateSubsetSize());
+        if (this.elements.subsetSymbols) this.elements.subsetSymbols.addEventListener('change', () => this.calculateSubsetSize());
+        if (this.elements.subsetExtended) this.elements.subsetExtended.addEventListener('change', () => this.calculateSubsetSize());
 
         // Overlay Toggle
         if (this.elements.toggleOverlayBtn) {
@@ -376,7 +366,16 @@ export class UI {
         if (this.elements.subsetExtended) this.elements.subsetExtended.checked = true;
 
         // Update size
-        if (this.elements.subsetSize) this.elements.subsetSize.textContent = '48 KB';
+        this.calculateSubsetSize();
+    }
+
+    calculateSubsetSize() {
+        let size = 0;
+        if (this.elements.subsetLatin && this.elements.subsetLatin.checked) size += 25;
+        if (this.elements.subsetNumbers && this.elements.subsetNumbers.checked) size += 5;
+        if (this.elements.subsetSymbols && this.elements.subsetSymbols.checked) size += 3;
+        if (this.elements.subsetExtended && this.elements.subsetExtended.checked) size += 15;
+        if (this.elements.subsetSize) this.elements.subsetSize.textContent = `${size} KB`;
     }
 
     toggleOverlay() {
@@ -475,34 +474,34 @@ body {
         // Small delay to allow layout to settle
         await new Promise(r => setTimeout(r, 100));
 
-        // Map font names to their Google Fonts URLs
+        // Map font names to their Google Fonts URLs (without display param)
         const fontUrls = {
             // Sans-Serif
-            'Roboto': 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap',
-            'Open Sans': 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap',
-            'Lato': 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
-            'Montserrat': 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap',
-            'Poppins': 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap',
-            'Inter': 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap',
-            'Nunito': 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap',
-            'Raleway': 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap',
-            'Ubuntu': 'https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap',
-            'Outfit': 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap',
+            'Roboto': 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700',
+            'Open Sans': 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700',
+            'Lato': 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700',
+            'Montserrat': 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700',
+            'Poppins': 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700',
+            'Inter': 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700',
+            'Nunito': 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700',
+            'Raleway': 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;700',
+            'Ubuntu': 'https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700',
+            'Outfit': 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700',
             // Serif
-            'Playfair Display': 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap',
-            'Merriweather': 'https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap',
-            'Lora': 'https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap',
-            'PT Serif': 'https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap',
-            'Source Serif Pro': 'https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap',
+            'Playfair Display': 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700',
+            'Merriweather': 'https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700',
+            'Lora': 'https://fonts.googleapis.com/css2?family=Lora:wght@400;700',
+            'PT Serif': 'https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700',
+            'Source Serif Pro': 'https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700',
             // Display
-            'Oswald': 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap',
-            'Bebas Neue': 'https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap',
-            'Anton': 'https://fonts.googleapis.com/css2?family=Anton&display=swap',
-            'Abril Fatface': 'https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap',
+            'Oswald': 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;700',
+            'Bebas Neue': 'https://fonts.googleapis.com/css2?family=Bebas+Neue',
+            'Anton': 'https://fonts.googleapis.com/css2?family=Anton',
+            'Abril Fatface': 'https://fonts.googleapis.com/css2?family=Abril+Fatface',
             // Monospace
-            'Fira Code': 'https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap',
-            'JetBrains Mono': 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap',
-            'Source Code Pro': 'https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap'
+            'Fira Code': 'https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700',
+            'JetBrains Mono': 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700',
+            'Source Code Pro': 'https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700'
         };
 
         // Determine font URL and name
@@ -514,16 +513,19 @@ body {
             const customName = this.elements.customFontName ? this.elements.customFontName.value.trim() : '';
 
             if (!fontUrl) {
-                alert('Please enter a Google Fonts URL');
+                // Don't alert on auto-update, just return
                 return;
             }
+
+            // Remove existing display param if present
+            fontUrl = fontUrl.replace(/[?&]display=[^&]+/, '');
 
             // Try to extract font name from URL if not provided
             if (customName) {
                 actualFontName = customName;
             } else {
                 // Extract font name from Google Fonts URL
-                const match = fontUrl.match(/family=([^:&]+)/);
+                const match = fontUrl.match(/[?&]family=([^&:]+)/);
                 if (match) {
                     actualFontName = match[1].replace(/\+/g, ' ');
                 } else {
@@ -537,6 +539,13 @@ body {
             fontUrl = fontUrls[fontName] || fontUrls['Roboto'];
         }
 
+        // Append display strategy
+        if (fontUrl.includes('?')) {
+            fontUrl += `&display=${strategy}`;
+        } else {
+            fontUrl += `?display=${strategy}`; // Should not happen for Google Fonts but good for safety
+        }
+
         // Load the actual font via link tag
         const existingLink = document.getElementById('dynamic-font-link');
         if (existingLink) existingLink.remove();
@@ -548,6 +557,7 @@ body {
         document.head.appendChild(link);
 
         // Wait for the font stylesheet to load before proceeding
+        // Note: This only waits for the CSS file, not the font files themselves
         await new Promise(resolve => {
             link.onload = resolve;
             link.onerror = resolve;
@@ -555,16 +565,22 @@ body {
         });
 
         // Simulate different loading strategies with visible delays
-        // Random load time between 2 and 10 seconds
-        const simulatedLoadTime = (Math.floor(Math.random() * 9) + 2) * 1000; // 2000-10000 ms
+        // Random load time between 1 and 3 seconds for better UX
+        const simulatedLoadTime = (Math.floor(Math.random() * 20) + 10) * 100; // 1000-3000 ms
+
+        console.log(`Simulating strategy: ${strategy} with duration: ${simulatedLoadTime}ms`);
 
         switch (strategy) {
             case 'block':
                 // FOIT: Hide text until font loads
-                if (this.elements.textSample) this.elements.textSample.style.visibility = 'hidden';
-                await new Promise(r => setTimeout(r, simulatedLoadTime));
                 if (this.elements.textSample) {
+                    this.elements.textSample.style.visibility = 'hidden';
                     this.elements.textSample.style.fontFamily = `"${actualFontName}", sans-serif`;
+                }
+
+                await new Promise(r => setTimeout(r, simulatedLoadTime));
+
+                if (this.elements.textSample) {
                     this.elements.textSample.style.visibility = 'visible';
                 }
                 this.metrics.updateMetricsFromLoader({ success: true, duration: simulatedLoadTime }, 'block');
@@ -572,15 +588,26 @@ body {
 
             case 'swap':
                 // FOUT: Show fallback immediately, swap when ready
-                if (this.elements.textSample) this.elements.textSample.style.fontFamily = 'Georgia, serif';
+                if (this.elements.textSample) {
+                    this.elements.textSample.style.visibility = 'visible';
+                    this.elements.textSample.style.fontFamily = 'Georgia, serif';
+                }
+
                 await new Promise(r => setTimeout(r, simulatedLoadTime));
-                if (this.elements.textSample) this.elements.textSample.style.fontFamily = `"${actualFontName}", sans-serif`;
+
+                if (this.elements.textSample) {
+                    this.elements.textSample.style.fontFamily = `"${actualFontName}", sans-serif`;
+                }
                 this.metrics.updateMetricsFromLoader({ success: true, duration: simulatedLoadTime }, 'swap');
                 break;
 
             case 'fallback':
                 // 1. Block Period (~100ms): Hide text
-                if (this.elements.textSample) this.elements.textSample.style.visibility = 'hidden';
+                if (this.elements.textSample) {
+                    this.elements.textSample.style.visibility = 'hidden';
+                    this.elements.textSample.style.fontFamily = `"${actualFontName}", sans-serif`;
+                }
+
                 await new Promise(r => setTimeout(r, 100));
 
                 // 2. Swap Period (~3s): Show fallback
@@ -590,6 +617,7 @@ body {
                 }
 
                 // Check if font loads within the swap period (3000ms)
+                // For demo, we use the simulated time
                 if (simulatedLoadTime < 3000) {
                     // Wait for the remaining load time
                     await new Promise(r => setTimeout(r, simulatedLoadTime - 100));
@@ -601,17 +629,11 @@ body {
                     this.metrics.updateMetricsFromLoader({ success: true, duration: simulatedLoadTime }, 'fallback');
                 } else {
                     // Font took too long (>3s), stick with fallback
-                    // We don't swap even if it eventually loads (for this page view)
                     this.metrics.updateMetricsFromLoader({ success: true, duration: simulatedLoadTime, swapped: false }, 'fallback');
                 }
                 break;
 
-            case 'optional':
-                // Only use font if already cached (simulate: not cached, use fallback)
-                if (this.elements.textSample) this.elements.textSample.style.fontFamily = 'Georgia, serif';
-                // No swap happens - font is treated as optional
-                this.metrics.updateMetricsFromLoader({ success: true, duration: 0 }, 'optional');
-                break;
+
 
             default:
                 if (this.elements.textSample) this.elements.textSample.style.fontFamily = `"${actualFontName}", sans-serif`;
