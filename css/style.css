@@ -598,3 +598,13 @@ input[type="text"]:focus {
         margin: var(--space-md);
     }
 }
+
+/* Timeline Animation */
+@keyframes loadBar {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}

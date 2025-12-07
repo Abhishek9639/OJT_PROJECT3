@@ -1,3 +1,16 @@
+// Utility function for debouncing
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 export class UI {
     constructor(fontLoader, metrics) {
         this.fontLoader = fontLoader;
@@ -38,11 +51,6 @@ export class UI {
             // Overlay Elements
             toggleOverlayBtn: document.getElementById('toggle-overlay'),
             previewOverlay: document.getElementById('preview-overlay'),
-
-            // Overlay Elements
-            toggleOverlayBtn: document.getElementById('toggle-overlay'),
-            previewOverlay: document.getElementById('preview-overlay'),
-
 
             // Font Comparison Elements
             compareFont1: document.getElementById('compare-font-1'),
@@ -633,12 +641,13 @@ body {
         const timelineViz = document.getElementById('timeline-viz');
         if (!timelineViz) return;
 
-        const duration = result.duration.toFixed(2);
+        const duration = result.duration || 0;
+        const durationFixed = duration.toFixed(2);
         timelineViz.innerHTML = `
             <div style="padding: 1rem; width: 100%;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Load Start: 0ms</span>
-                    <span>Load End: ${duration}ms</span>
+                    <span>Load End: ${durationFixed}ms</span>
                 </div>
                 <div style="height: 20px; background: rgba(255,255,255,0.1); border-radius: 4px; position: relative; overflow: hidden;">
                     <div style="
@@ -648,12 +657,12 @@ body {
                         height: 100%;
                         width: 100%;
                         background: var(--primary-color);
-                        animation: loadBar ${duration}ms linear;
+                        animation: loadBar ${durationFixed}ms linear;
                         transform-origin: left;
                     "></div>
                 </div>
                 <div style="text-align: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary);">
-                    Total Load Time: ${duration}ms
+                    Total Load Time: ${durationFixed}ms
                 </div>
             </div>
         `;
