@@ -553,15 +553,50 @@ input[type="text"]:focus {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+    }
+
     .app-container {
         height: auto;
-        overflow-y: auto;
-        border-width: 4px;
+        min-height: 100vh;
+        overflow-y: visible;
+    }
+
+    .app-header {
+        padding: var(--space-sm) var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .logo h1 {
+        font-size: 1.2rem;
+    }
+
+    .logo svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+        gap: var(--space-md);
+        flex-wrap: wrap;
+    }
+
+    nav a {
+        font-size: 0.8rem;
+        padding: var(--space-xs) 0;
     }
 
     .main-content {
         flex-direction: column;
         overflow: visible;
+        height: auto;
     }
 
     .sidebar {
@@ -570,32 +605,165 @@ input[type="text"]:focus {
         border-right: none;
         border-bottom: 2px solid var(--gold-accent);
         overflow-y: visible;
+        padding: var(--space-md);
+    }
+
+    .panel h2 {
+        font-size: 0.85rem;
+    }
+
+    .control-group label {
+        font-size: 0.85rem;
+    }
+
+    select,
+    input[type="range"],
+    input[type="text"] {
+        font-size: 0.9rem;
+        padding: var(--space-xs) var(--space-sm);
+    }
+
+    .btn {
+        font-size: 0.75rem;
+        padding: var(--space-xs) var(--space-md);
+    }
+
+    .btn.small {
+        font-size: 0.7rem;
+        padding: 0.25rem var(--space-sm);
     }
 
     .preview-area {
         width: 100%;
         overflow-y: visible;
         padding: var(--space-md);
+        height: auto;
+    }
+
+    .preview-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .preview-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .preview-canvas {
+        padding: var(--space-md);
+        min-height: 300px;
+        outline-offset: -6px;
+    }
+
+    .text-sample h1 {
+        font-size: 1.75em;
+        margin-bottom: var(--space-md);
+    }
+
+    .text-sample p {
+        font-size: 1em;
+        margin-bottom: var(--space-md);
     }
 
     .font-comparison {
         grid-template-columns: 1fr;
-    }
-
-    .app-header {
-        padding: var(--space-sm) var(--space-md);
-        flex-direction: column;
         gap: var(--space-md);
     }
 
-    nav {
-        width: 100%;
-        justify-content: center;
+    .compare-text h1 {
+        font-size: 1.5em;
+    }
+
+    .compare-text p {
+        font-size: 0.9em;
+    }
+
+    .timeline-viz {
+        height: 100px;
+        font-size: 0.85rem;
+        padding: var(--space-sm);
+    }
+
+    .metric-card {
+        padding: var(--space-sm);
+    }
+
+    .metric-label {
+        font-size: 0.65rem;
+    }
+
+    .metric-value {
+        font-size: 1rem;
     }
 
     .modal-content {
         width: 95%;
+        max-width: none;
         margin: var(--space-md);
+    }
+
+    .modal-header {
+        padding: var(--space-md);
+    }
+
+    .modal-header h2 {
+        font-size: 1rem;
+    }
+
+    .modal-body {
+        padding: var(--space-md);
+        font-size: 0.9rem;
+    }
+
+    .modal-body h3 {
+        font-size: 1rem;
+    }
+}
+
+/* Extra small devices (phones in portrait, less than 480px) */
+@media (max-width: 480px) {
+    .app-header {
+        padding: var(--space-xs) var(--space-sm);
+    }
+
+    .logo h1 {
+        font-size: 1rem;
+    }
+
+    nav {
+        gap: var(--space-sm);
+    }
+
+    nav a {
+        font-size: 0.75rem;
+    }
+
+    .sidebar {
+        padding: var(--space-sm);
+    }
+
+    .preview-area {
+        padding: var(--space-sm);
+    }
+
+    .preview-canvas {
+        padding: var(--space-sm);
+        outline-width: 2px;
+        outline-offset: -4px;
+    }
+
+    .text-sample h1 {
+        font-size: 1.5em;
+    }
+
+    .text-sample p {
+        font-size: 0.9em;
+    }
+
+    .timeline-viz {
+        height: 80px;
+        font-size: 0.75rem;
     }
 }
 
